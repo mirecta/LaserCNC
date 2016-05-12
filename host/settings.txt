@@ -1,0 +1,4 @@
+White paper 
+Move: 500, Speed: 500, Power: 110, Delay: 200
+
+
