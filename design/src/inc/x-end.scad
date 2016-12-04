@@ -13,6 +13,8 @@ module x_end_base(){
 height = 68;
 translate(v=[-15,-9,height/2]) cube(size = [22,39,height], center = true);
 translate([-11-4,-41+25-5,2]) cube([50,50,4], center = true);
+translate([-4,-10,4])rotate([90,0,0])linear_extrude(height=15)polygon(points=[[0,0], [12,0], [0,12]]);
+translate([-22-4,-10,4])rotate([90,0,0])linear_extrude(height=15)polygon(points=[[0,0], [-12,0], [0,12]]);
 }
 
 module x_end_holes(){
