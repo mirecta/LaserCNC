@@ -41,7 +41,7 @@
  */
 #if ENABLED(REVERSE_MENU_DIRECTION)
   int8_t encoderDirection = 1;
-  #define ENCODER_DIRECTION_NORMAL() (encoderDirection = 1)
+  #define ENCODER_DIRECTION_NORMAL() (encoderDirection = -1)
   #define ENCODER_DIRECTION_MENUS() (encoderDirection = -1)
 #else
   #define ENCODER_DIRECTION_NORMAL() ;
@@ -870,6 +870,16 @@ static void lcd_prepare_menu() {
   //
   MENU_ITEM(submenu, MSG_MOVE_AXIS, lcd_move_menu);
 
+  #ifdef LASER_CTRL 
+     MENU_ITEM_EDIT(int3, "Laser power ",(int*) (&laser_ttl_modulation), 0, 255);
+     if ( laser_ttl_modulation == 0){
+       digitalWrite(LASER_PWR_PIN,LOW);
+     }else{
+       digitalWrite(LASER_PWR_PIN,HIGH);
+     }
+  
+  #endif
+
   //
   // Disable Steppers
   //
@@ -879,7 +889,7 @@ static void lcd_prepare_menu() {
   // Preheat PLA
   // Preheat ABS
   //
-  #if TEMP_SENSOR_0 != 0
+ /* #if TEMP_SENSOR_0 != 0
     #if TEMP_SENSOR_1 != 0 || TEMP_SENSOR_2 != 0 || TEMP_SENSOR_3 != 0 || TEMP_SENSOR_BED != 0
       MENU_ITEM(submenu, MSG_PREHEAT_PLA, lcd_preheat_pla_menu);
       MENU_ITEM(submenu, MSG_PREHEAT_ABS, lcd_preheat_abs_menu);
@@ -893,7 +903,7 @@ static void lcd_prepare_menu() {
   // Cooldown
   //
   MENU_ITEM(function, MSG_COOLDOWN, lcd_cooldown);
-
+*/
   //
   // Switch power on/off
   //

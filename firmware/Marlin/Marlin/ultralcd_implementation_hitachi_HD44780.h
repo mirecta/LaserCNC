@@ -578,7 +578,9 @@ static void lcd_implementation_status_screen() {
   //
 
   lcd.setCursor(0, 0);
-
+  lcd.print("Laser:");
+  lcd.print(itostr3(laser_ttl_modulation));
+/*
   #if LCD_WIDTH < 20
 
     //
@@ -623,7 +625,7 @@ static void lcd_implementation_status_screen() {
     #endif  // EXTRUDERS > 1 || TEMP_SENSOR_BED != 0
 
   #endif // LCD_WIDTH >= 20
-
+*/
   //
   // Line 2
   //
