@@ -138,7 +138,7 @@
 #define PS_ON_PIN          12
 
 #if ENABLED(REPRAP_DISCOUNT_SMART_CONTROLLER) || ENABLED(G3D_PANEL)
-  #define KILL_PIN         41
+  #define KILL_PIN         -1
 #endif
 
 #if MB(RAMPS_14_EFF) || MB(RAMPS_13_EFF)
