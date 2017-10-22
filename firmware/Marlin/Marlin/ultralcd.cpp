@@ -466,7 +466,9 @@ static void lcd_return_to_status() {
  * "Main" menu
  *
  */
-
+ float move_menu_scale;
+static void _lcd_move(const char* name, AxisEnum axis, int min, int max);
+static void lcd_move_z() { _lcd_move(PSTR(MSG_MOVE_Z), Z_AXIS, Z_MIN_POS, Z_MAX_POS); }
 static void lcd_main_menu() {
   START_MENU();
   MENU_ITEM(back, MSG_WATCH, lcd_status_screen);
@@ -474,6 +476,29 @@ static void lcd_main_menu() {
     MENU_ITEM(submenu, MSG_TUNE, lcd_tune_menu);
   }
   else {
+    //LASER poWER
+  #ifdef LASER_CTRL 
+     MENU_ITEM_EDIT(int3, "Laser power ",(int*) (&laser_ttl_modulation), 0, 255);
+     if ( laser_ttl_modulation == 0){
+       digitalWrite(LASER_PWR_PIN,LOW);
+     }else{
+       digitalWrite(LASER_PWR_PIN,HIGH);
+     }
+  
+  #endif
+    //FOCUSING
+    move_menu_scale = 0.1;  
+    MENU_ITEM(submenu, "Focus", lcd_move_z);
+    //HOME Z
+    MENU_ITEM(gcode, "Home Z", PSTR("G28 Z"));
+    //MOT OFF
+    MENU_ITEM(gcode, MSG_DISABLE_STEPPERS, PSTR("M84"));
+    //HOME XY
+    MENU_ITEM(gcode, "Home XY", PSTR("G28 X Y"));
+    //GOTO ZERO
+    MENU_ITEM(gcode, "Zero XY", PSTR("G1 X0 Y0 F6000"));
+
+
     MENU_ITEM(submenu, MSG_PREPARE, lcd_prepare_menu);
     #if ENABLED(DELTA_CALIBRATION_MENU)
       MENU_ITEM(submenu, MSG_DELTA_CALIBRATE, lcd_delta_calibrate_menu);
@@ -954,7 +979,7 @@ inline void line_to_current(AxisEnum axis) {
  *
  */
 
-float move_menu_scale;
+
 static void lcd_move_menu_axis();
 
 static void _lcd_move(const char* name, AxisEnum axis, int min, int max) {
@@ -980,7 +1005,6 @@ static void _lcd_move(const char* name, AxisEnum axis, int min, int max) {
   static void lcd_move_x() { _lcd_move(PSTR(MSG_MOVE_X), X_AXIS, X_MIN_POS, X_MAX_POS); }
   static void lcd_move_y() { _lcd_move(PSTR(MSG_MOVE_Y), Y_AXIS, Y_MIN_POS, Y_MAX_POS); }
 #endif
-static void lcd_move_z() { _lcd_move(PSTR(MSG_MOVE_Z), Z_AXIS, Z_MIN_POS, Z_MAX_POS); }
 static void lcd_move_e(
   #if EXTRUDERS > 1
     uint8_t e

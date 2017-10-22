@@ -2578,12 +2578,12 @@ class laser_gcode(inkex.Effect):
                 self.header += "G21\n"
             elif self.options.unit == "G20 (All units in inches)" :
                 self.header += "G20\n"
-
+        #FIXME Hardcode ignore Z movement
 	    if self.options.zero_position:
-                self.header += "G28\n"
-		self.header += "G1 X0 Y0 Z0 F%s\n" % self.options.travel_speed 
+                self.header += "G28 X Y\n"
+		self.header += "G1 X0 Y0 F%s\n" % self.options.travel_speed 
             
-	    self.header += "G1 Z%s F300\n" % str(float(self.options.mat_thick) + float(self.options.z_offset)) ;
+        #self.header += "G1 Z%s F300\n" % str(float(self.options.mat_thick) + float(self.options.z_offset)) ;
             self.options.pass_depth = str(float(self.options.mat_thick) / self.options.passes)
 		
         else: 
