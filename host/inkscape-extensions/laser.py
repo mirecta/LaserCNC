@@ -2407,9 +2407,15 @@ class Arangement_Genetic:
 class laser_gcode(inkex.Effect):
 
     def export_gcode(self,gcode):
+        
+        gcode = gcode.replace('{{speed}}', "%f" % self.options.laser_speed)
         gcode_pass = gcode
         for x in range(1,self.options.passes):
-            gcode += "G91\nG1 Z-" + self.options.pass_depth + "\nG90\n" + gcode_pass
+            #gcode += "G91\nG1 Z-" + self.options.pass_depth + "\nG90\n" + gcode_pass
+            gcode += gcode_pass.replace('{{speed}}',"%f" % self.options.laser_speed)
+        for x in range(0,self.options.passes2):
+            gcode += gcode_pass.replace('{{speed}}',"%f" % self.options.laser_speed2)
+
         f = open(self.options.directory+self.options.file, "w")
         f.write(self.options.laser_off_command + " S0" + "\n" + self.header + "G1 F" + self.options.travel_speed + "\n" + gcode + self.footer)
         f.close()
@@ -2424,12 +2430,12 @@ class laser_gcode(inkex.Effect):
         self.OptionParser.add_option("",   "--laser-off-command",               action="store", type="string",          dest="laser_off_command",                   default="M05",                         help="Laser gcode end command")       
         self.OptionParser.add_option("",   "--laser-speed",                     action="store", type="int",             dest="laser_speed",                         default="100",                          help="Laser speed (mm/min)")
         self.OptionParser.add_option("",   "--travel-speed",                    action="store", type="string",          dest="travel_speed",                        default="3000",                         help="Travel speed (mm/min)")
-        self.OptionParser.add_option("",   "--laser-power",                     action="store", type="int",             dest="laser_power",                         default="256",                          help="S# is 256 or 10000 for full power")
+        self.OptionParser.add_option("",   "--laser-power",                     action="store", type="int",             dest="laser_power",                         default="255",                          help="S# is 256 or 10000 for full power")
         self.OptionParser.add_option("",   "--passes",                          action="store", type="int",             dest="passes",                              default="1",                            help="Quantity of passes")
-        self.OptionParser.add_option("",   "--pass-depth",                      action="store", type="string",          dest="pass_depth",                          default="1",                            help="Depth of laser cut")
-        self.OptionParser.add_option("",   "--mat-thick",                       action="store", type="string",          dest="mat_thick",                           default="1",                            help="Material thickness")
+        self.OptionParser.add_option("",   "--pass-depth",                      action="store", type="string",          dest="pass_depth",                          default="0",                            help="Depth of laser cut")
+        self.OptionParser.add_option("",   "--mat-thick",                       action="store", type="string",          dest="mat_thick",                           default="0",                            help="Material thickness")
         self.OptionParser.add_option("",   "--z-offset",                        action="store", type="string",          dest="z_offset",                            default="0",                            help="Z axis offset")
-        self.OptionParser.add_option("",   "--power-delay",                     action="store", type="string",          dest="power_delay",                         default="100",                          help="Laser power-on delay (ms)")
+        self.OptionParser.add_option("",   "--power-delay",                     action="store", type="string",          dest="power_delay",                         default="150",                          help="Laser power-on delay (ms)")
         self.OptionParser.add_option("",   "--suppress-all-messages",           action="store", type="inkbool",         dest="suppress_all_messages",               default=True,                           help="Hide messages during g-code generation")
         self.OptionParser.add_option("",   "--create-log",                      action="store", type="inkbool",         dest="log_create_log",                      default=False,                          help="Create log files")
         self.OptionParser.add_option("",   "--log-filename",                    action="store", type="string",          dest="log_filename",                        default='',                             help="Create log files")
@@ -2437,6 +2443,8 @@ class laser_gcode(inkex.Effect):
         self.OptionParser.add_option("",   "--unit",                            action="store", type="string",          dest="unit",                                default="G21 (All units in mm)",        help="Units either mm or inches")
         self.OptionParser.add_option("",   "--active-tab",                      action="store", type="string",          dest="active_tab",                          default="",                             help="Defines which tab is active")
         self.OptionParser.add_option("",   "--biarc-max-split-depth",           action="store", type="int",             dest="biarc_max_split_depth",               default="4",                            help="Defines maximum depth of splitting while approximating using biarcs.")                
+        self.OptionParser.add_option("",   "--laser-speed2",                     action="store", type="int",             dest="laser_speed2",                         default="100",                          help="Laser speed 2 (mm/min)")
+        self.OptionParser.add_option("",   "--passes2",                          action="store", type="int",             dest="passes2",                              default="0",                            help="Quantity of passes")
         
     def parse_curve(self, p, layer, w = None, f = None):
             c = []
@@ -2654,7 +2662,7 @@ class laser_gcode(inkex.Effect):
         print_("Curve: " + str(curve))
         g = ""
 
-        lg, f =  'G00', "F%f"%tool['penetration feed']
+        lg, f =  'G00', "F%s"%tool['penetration feed']
         penetration_feed = "F%s"%tool['penetration feed'] 
         current_a = 0
         for i in range(1,len(curve)):
@@ -3171,8 +3179,8 @@ class laser_gcode(inkex.Effect):
         self.tools = {
             "name": "Laser Engraver",
             "id": "Laser Engraver",
-            "penetration feed": self.options.laser_speed,
-            "feed": self.options.laser_speed,
+            "penetration feed":"{{speed}}", # self.options.laser_speed,
+            "feed": "{{speed}}", #self.options.laser_speed,
             "gcode before path": ("G4 P0 \n" + self.options.laser_command + " S" + str(int(self.options.laser_power)) + "\nG4 P" + self.options.power_delay),
             "gcode after path": ("G4 P0 \n" + self.options.laser_off_command + " S0" + "\n" + "G1 F" + self.options.travel_speed),
         }

@@ -472,10 +472,6 @@ static void lcd_move_z() { _lcd_move(PSTR(MSG_MOVE_Z), Z_AXIS, Z_MIN_POS, Z_MAX_
 static void lcd_main_menu() {
   START_MENU();
   MENU_ITEM(back, MSG_WATCH, lcd_status_screen);
-  if (movesplanned() || IS_SD_PRINTING) {
-    MENU_ITEM(submenu, MSG_TUNE, lcd_tune_menu);
-  }
-  else {
     //LASER poWER
   #ifdef LASER_CTRL 
      MENU_ITEM_EDIT(int3, "Laser power ",(int*) (&laser_ttl_modulation), 0, 255);
@@ -498,6 +494,11 @@ static void lcd_main_menu() {
     //GOTO ZERO
     MENU_ITEM(gcode, "Zero XY", PSTR("G1 X0 Y0 F6000"));
 
+
+  if (movesplanned() || IS_SD_PRINTING) {
+    MENU_ITEM(submenu, MSG_TUNE, lcd_tune_menu);
+  }
+  else {
 
     MENU_ITEM(submenu, MSG_PREPARE, lcd_prepare_menu);
     #if ENABLED(DELTA_CALIBRATION_MENU)
