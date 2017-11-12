@@ -10,10 +10,12 @@
 	<param name="travel-speed" type="int" min="0" max="12000" _gui-text="Travel Speed (mm/min or in/min):">3000</param>
 	<param name="laser-power" type="int" min="0" max="10000" _gui-text="Laser Power S# (0-256 or 0-10000):">255</param>
 	<param name="power-delay" type="int" min="0" max="1000" _gui-text="Power-On Delay (ms or s):">0</param>	
-	<param name="laser-speed" type="int" min="0" max="4000" _gui-text="Laser Speed (mm/min or in/min):">100</param>
+	<param name="laser-speed" type="int" min="0" max="4000" _gui-text="Laser Speed (mm/min or in/min):">280</param>
     <param name="passes" type="int" min="1" max="100" _gui-text="Passes:">1</param>
 	<param name="laser-speed2" type="int" min="0" max="4000" _gui-text="Laser Speed 2 (mm/min or in/min):">100</param>
     <param name="passes2" type="int" min="0" max="100" _gui-text="Passes 2 :">0</param>
+	<param name="laser-speed3" type="int" min="0" max="4000" _gui-text="Laser Speed 3 (mm/min or in/min):">80</param>
+    <param name="passes3" type="int" min="0" max="100" _gui-text="Passes 3 :">0</param>
     
 	<!--param name="mat-thick" type="float" min="0" max="20" _gui-text="Material hickness:">0</param>
 	<param name="z-offset" type="float" min="0" max="70" _gui-text="Z axis offset:">0</param-->

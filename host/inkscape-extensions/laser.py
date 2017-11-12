@@ -2407,16 +2407,18 @@ class Arangement_Genetic:
 class laser_gcode(inkex.Effect):
 
     def export_gcode(self,gcode):
-        
-        gcode = gcode.replace('{{speed}}', "%f" % self.options.laser_speed)
-        gcode_pass = gcode
+        layer_gcode = gcode 
+        gcode = layer_gcode.replace('{{speed}}', "%f" % self.options.laser_speed)
         for x in range(1,self.options.passes):
             #gcode += "G91\nG1 Z-" + self.options.pass_depth + "\nG90\n" + gcode_pass
-            gcode += gcode_pass.replace('{{speed}}',"%f" % self.options.laser_speed)
+            gcode += layer_gcode.replace('{{speed}}',"%f" % self.options.laser_speed)
         for x in range(0,self.options.passes2):
-            gcode += gcode_pass.replace('{{speed}}',"%f" % self.options.laser_speed2)
+            gcode += layer_gcode.replace('{{speed}}',"%f" % self.options.laser_speed2)
+        for x in range(0,self.options.passes3):
+            gcode += layer_gcode.replace('{{speed}}',"%f" % self.options.laser_speed3)
 
         f = open(self.options.directory+self.options.file, "w")
+        f.write(";Options: %s \n" % self.options.__dict__)
         f.write(self.options.laser_off_command + " S0" + "\n" + self.header + "G1 F" + self.options.travel_speed + "\n" + gcode + self.footer)
         f.close()
 
@@ -2445,6 +2447,8 @@ class laser_gcode(inkex.Effect):
         self.OptionParser.add_option("",   "--biarc-max-split-depth",           action="store", type="int",             dest="biarc_max_split_depth",               default="4",                            help="Defines maximum depth of splitting while approximating using biarcs.")                
         self.OptionParser.add_option("",   "--laser-speed2",                     action="store", type="int",             dest="laser_speed2",                         default="100",                          help="Laser speed 2 (mm/min)")
         self.OptionParser.add_option("",   "--passes2",                          action="store", type="int",             dest="passes2",                              default="0",                            help="Quantity of passes")
+        self.OptionParser.add_option("",   "--laser-speed3",                     action="store", type="int",             dest="laser_speed3",                         default="50",                          help="Laser speed 2 (mm/min)")
+        self.OptionParser.add_option("",   "--passes3",                          action="store", type="int",             dest="passes3",                              default="0",                            help="Quantity of passes")
         
     def parse_curve(self, p, layer, w = None, f = None):
             c = []

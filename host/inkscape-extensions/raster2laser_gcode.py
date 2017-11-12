@@ -549,7 +549,8 @@ class GcodeExport(inkex.Effect):
 			file_gcode.write('G00 X0 Y0; home\n')
 			#HOMING
 			if self.options.homing == 1:
-				file_gcode.write('G28; home all axes\n')
+                #ignore Z axis hardcoded
+				file_gcode.write('G28 X Y; home all axes\n')
 			elif self.options.homing == 2:
 				file_gcode.write('$H; home all axes\n')
 			else:
